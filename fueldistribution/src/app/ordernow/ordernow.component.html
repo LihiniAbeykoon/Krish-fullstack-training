@@ -1,0 +1,53 @@
+<!-- <section class="ordernow">
+    <div class="order col-lg-5 m-auto shadow-lg">
+        <form  >
+            <div class="mb-3">
+              <label for="InputFuelStationID" class="form-label">Fuel Station ID</label>
+              <input type="text" class="form-control" id="InputFuelStationID" >
+              <label for="InputFuelType" class="form-label">Fuel Type</label>
+              <input type="Text" class="form-control" id="InputFuelType">
+              <label for="InputCapacity" class="form-label">Capacity</label>
+              <input type="text" class="form-control" id="InputFuelType" >
+              <label for="InputLocation" class="form-label">Location</label>
+              <input type="text" class="form-control" id="InputLocation" >
+              <label for="InputOwnerName" class="form-label">Owner Name</label>
+              <input type="text" class="form-control" id="InputOwnerName" >
+            </div>
+            <button type="submit" class="btn btn-primary col-lg-12">Submit</button>
+          </form>
+    </div>
+</section> -->
+
+<div class = "container">
+<div class="card mt-5" style="align-items: center;">
+  <h1>Order Now</h1>
+</div>
+
+<div class="card mt-5" padding:20px>
+  <form  #submitForm="ngForm" (ngSubmit)="submit(submitForm)">
+    <div class="form-group">
+      <label for="fuelStationID">Fuel Station ID:</label>
+      <input type="text" #fuelStationID (ngModel)="fuelStationID" name="fuelStationID" id="fuelStationID" class="form-control" placeholder="Fuel Station ID">
+    </div>
+    <div class="form-group">
+      <label for="capacity">Capacity:</label>
+      <input type="text" #capacity (ngModel)="capacity" name="capacity" id="capacity" class="form-control" placeholder="Capacity">
+    </div>
+    <div class="form-group">
+      <label for="fuelType">Fuel Type:</label>
+      <input type="text" #fuelType (ngModel)="fuelType" name="fuelType" id="capacity" class="form-control" placeholder="Fuel Type">
+    </div>
+    <div class="form-group">
+      <label for="ownerName">Owner Name:</label>
+      <input type="text" #ownerName (ngModel)="ownerName" name="ownerName" id="ownerName" class="form-control" placeholder="Owner Name">
+    </div>
+    <div class="form-group">
+      <label for="location">Location:</label>
+      <input type="text" #location (ngModel)="location" name="location" id="location" class="form-control" placeholder="Location">
+    </div>
+    <div class="form-group">
+      <input type="submit" value="Submit" class="btn btn-primary w-100">
+    </div>
+  </form>
+</div>
+</div>
