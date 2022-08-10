@@ -3,17 +3,16 @@ package com.lihini.fueldistribution.schedulerservice.services;
 
 import com.lihini.fueldistribution.schedulerservice.model.Scheduler;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
 public interface SchedulerService {
 
-     LocalDate scheduleDate();
+    public List<Scheduler> getAll();
 
-     Scheduler save(Scheduler scheduler);
+    public boolean saveSchedule(Scheduler scheduler);
 
-//     List<Scheduler> findAll();
+//    public Scheduler scheduleDate(int scheduleId);
 
 
 

@@ -1,5 +1,6 @@
 package com.lihini.fueldistribution.schedulerservice.controller;
 
+import com.lihini.fueldistribution.orderservice.model.Order;
 import com.lihini.fueldistribution.schedulerservice.model.Scheduler;
 import com.lihini.fueldistribution.schedulerservice.services.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +11,28 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("api/scheduler")
+@RequestMapping("/api/scheduler")
 public class SchedulerController {
 
     @Autowired
     SchedulerService schedulerService;
 
     @GetMapping(path = "/All")
-    public LocalDate getAllSchedules(){
-       LocalDate schedulerList = schedulerService.scheduleDate();
-       return schedulerList;
+    public List<Scheduler> getAllSchedules() {
+        List<Scheduler> schedulerList= schedulerService.getAll();
+        return schedulerList;
+
     }
 
     @PostMapping(path = "/saveSchedule")
-    public LocalDate save(@RequestBody Scheduler scheduler){
-        return schedulerService.scheduleDate();
+    public boolean saveSchedule(@RequestBody Scheduler scheduler){
+        boolean scheduler1= schedulerService.saveSchedule(scheduler);
+        return scheduler1;
     }
 
-//    @PutMapping("/update")
-//    public List<Scheduler> findAll(){
-//        return schedulerService.findAll();
-//    }
+
+
+
 
 
 

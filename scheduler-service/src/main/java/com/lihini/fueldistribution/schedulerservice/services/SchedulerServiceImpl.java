@@ -1,18 +1,17 @@
 package com.lihini.fueldistribution.schedulerservice.services;
 
+import com.lihini.fueldistribution.allocationservice.services.AllocationServiceImpl;
+import com.lihini.fueldistribution.orderservice.model.Order;
+import com.lihini.fueldistribution.orderservice.services.OrderServiceImpl;
 import com.lihini.fueldistribution.schedulerservice.model.Scheduler;
 import com.lihini.fueldistribution.schedulerservice.repository.SchedulerRepository;
-import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.config.FixedRateTask;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 @Service
@@ -21,24 +20,34 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Autowired
     SchedulerRepository schedulerRepository;
 
-    public LocalDate scheduleDate() {
-        long start = LocalDate.now().toEpochDay();
-        long end = LocalDate.ofEpochDay(60).toEpochDay();
-        long randomDay = ThreadLocalRandom
-                .current()
-                .nextLong(start, end);
+    AllocationServiceImpl allocationServiceImpl;
 
-        return LocalDate.ofEpochDay(randomDay);
+
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
+
+    public boolean saveSchedule(Scheduler scheduler){
+        //kafkamethod(order)
+        Order order1=new Order();
+        if(allocationServiceImpl.checkAllocation(order1)==true){
+            scheduler.setDateCreated(LocalDate.now().plusDays(2));
+            scheduler.setScheduleStatus("Scheduled");
+            schedulerRepository.save(scheduler);
+            kafkaTemplate.send("ScheduleTopic", order1);
+            return true;
+        }else {
+           return false;
+        }
+
     }
 
-    @Override
-    public Scheduler save(Scheduler scheduler){
-        return schedulerRepository.save(scheduler);
+
+    public List<Scheduler> getAll(){
+        List<Scheduler> schedulerList= schedulerRepository.findAll();
+        return schedulerList;
     }
 
-//    @Override
-//    public List<Scheduler> findAll(){
-//        return schedulerRepository.findAll();
-//    }
+
     
 }
