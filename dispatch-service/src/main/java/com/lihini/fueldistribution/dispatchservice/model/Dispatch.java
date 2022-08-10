@@ -16,7 +16,7 @@ public class Dispatch {
     @JoinColumn(name = "orderId", referencedColumnName = "orderID")
     private Order orderId;
     private String dispatchDate;
-    private String status;
+    private Status status;
 
     public String getDispatchId() {
         return dispatchId;
@@ -42,11 +42,11 @@ public class Dispatch {
         this.dispatchDate = dispatchDate;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }
