@@ -4,7 +4,10 @@ import com.lihini.fueldistribution.allocationservice.model.Allocation;
 import com.lihini.fueldistribution.allocationservice.model.FuelType;
 import com.lihini.fueldistribution.allocationservice.model.Status;
 import com.lihini.fueldistribution.allocationservice.repository.AllocationRepository;
+import com.lihini.fueldistribution.orderservice.model.Order;
+import com.lihini.fueldistribution.orderservice.services.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,66 +17,93 @@ public class AllocationServiceImpl implements AllocationService {
     AllocationRepository allocationRepository;
 
 
-    public Allocation checkAvailable(Allocation allocation){
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-        int stockCapacity=1000;
-        int available=1000;
-        int reserve=0;
-        int orderCapacity=100;
-        Status status;
-
-        FuelType fuel = FuelType.valueOf("petrol92");
-        FuelType fuel2 = FuelType.valueOf("petrol92");
-        FuelType fuel3 = FuelType.valueOf("petrol95");
-        FuelType fuel4 = FuelType.valueOf("diesel");
-        FuelType fuel5 = FuelType.valueOf("superdiesel");
-
-
-
-        if( fuel==fuel2 && available>orderCapacity && stockCapacity>orderCapacity)
-            {
-                reserve=reserve+orderCapacity;
-                available=available-orderCapacity;
-                status=Status.Allocated;
-
-            }else if(fuel==fuel3 && available>orderCapacity && stockCapacity>orderCapacity)
-            {
-                reserve=reserve+orderCapacity;
-                available=available-orderCapacity;
-                status=Status.Allocated;
-            }else if(fuel==fuel4 && available>orderCapacity && stockCapacity>orderCapacity)
-            {
-                reserve=reserve+orderCapacity;
-                available=available-orderCapacity;
-                status=Status.Allocated;
-            }else if(fuel==fuel5 && available>orderCapacity && stockCapacity>orderCapacity)
-            {
-                reserve=reserve+orderCapacity;
-                available=available-orderCapacity;
-                status=Status.Allocated;
-            }else {
-            status=Status.NotAllocated;
+    //to take order method()
+    public boolean checkAllocation(Order order){
+        Order order1= new Order();
+        int orderCapacity=order1.getCapacity();
+        String fuel= order1.getFuelType();
+        Allocation allocation=new Allocation();
+        if(checkAvailable(orderCapacity,fuel)==true){
+            allocation.setStatus(Status.Allocated);
+            kafkaTemplate.send("AllocationTopic", order1);
+            return true;
+        }else{
+            allocation.setStatus(Status.NotAllocated);
+            kafkaTemplate.send("AllocationTopic", order1);
+            return false;
         }
 
+//string->order
 
-        return allocationRepository.save(allocation);
 
     }
 
-    public Allocation getStatus(long orderID){
+    public boolean checkAvailable(int orderCapacity, String fuel) {//give a parameter needed
 
-        Allocation allocation=allocationRepository.findAllocationByOrderId(orderID);
-        Status status= Status.Allocated;
-        allocation.setStatus(status.toString());
-        return allocation;
+        int stockCapacity92 = 20000;
+        int stockCapacity95 = 20000;
+        int stockCapacityDiesel = 20000;
+        int stockCapacitySuperDiesel = 20000;
 
+        int availableCapacity92 = 20000;
+        int availableCapacity95 = 20000;
+        int availableCapacityDiesel = 20000;
+        int availableCapacitySuperDiesel = 20000;
+
+        int reserve = 0;
+
+        String fuel2 = "petrol92";
+        String fuel3 = "petrol95";
+        String fuel4 = "diesel";
+        String fuel5 = "superdiesel";
+
+
+        if (fuel == fuel2) {
+            if (stockCapacity92 > orderCapacity && availableCapacity92 > orderCapacity) {
+                availableCapacity92 = availableCapacity92 - orderCapacity;
+                reserve = reserve + orderCapacity;
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else if (fuel == fuel3) {
+            if (stockCapacity95 > orderCapacity && availableCapacity95 > orderCapacity) {
+                availableCapacity95 = availableCapacity95 - orderCapacity;
+                reserve = reserve + orderCapacity;
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else if (fuel == fuel4) {
+            if (stockCapacityDiesel > orderCapacity && availableCapacityDiesel > orderCapacity) {
+                availableCapacityDiesel = availableCapacityDiesel - orderCapacity;
+                reserve = reserve + orderCapacity;
+                return true;
+            } else {
+                return false;
+            }
+        }
+        else if (fuel == fuel5) {
+            if (stockCapacitySuperDiesel > orderCapacity && availableCapacitySuperDiesel > orderCapacity) {
+                availableCapacitySuperDiesel = availableCapacitySuperDiesel - orderCapacity;
+                reserve = reserve + orderCapacity;
+                return true;
+            } else {
+                return false;
+            }
+        }else{
+            System.out.println("Incorrect FuelType");
+            return false;
+        }
     }
-
-
-
-
-
-
-
 
 }
+
+
+
+

@@ -19,7 +19,7 @@ public class Allocation {
     private int stockCapacity;
     private int availableCapacity;
     private int reservedCapacity;
-    private String status;
+    private Status status;
 
     public long getFuelStockID() {
         return fuelStockID;
@@ -69,11 +69,11 @@ public class Allocation {
         this.reservedCapacity = reservedCapacity;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }
