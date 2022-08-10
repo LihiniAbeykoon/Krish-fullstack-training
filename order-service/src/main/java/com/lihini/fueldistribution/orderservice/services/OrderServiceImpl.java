@@ -8,18 +8,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
+
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
-@EnableAutoConfiguration
+
 @Service
 public class OrderServiceImpl implements OrderService{
 
@@ -28,21 +25,16 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     OrderRepository orderRepository;
 
-    KafkaTemplate<String, String> kafkaTemplate;
-
-
 
     @Override
     public Order save(Order order){
-        kafkaTemplate.send("lihiniB","hello kafka");
         return orderRepository.save(order);
 
     }
 
-
-
     public List<Order> findAll(){
         return orderRepository.findAll();
     }
+
 
 }

@@ -3,7 +3,7 @@ package com.lihini.fueldistribution.orderservice.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="orders")
+@Table(name = "Orders")
 public class Order {
 
     @Id
